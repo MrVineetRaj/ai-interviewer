@@ -39,7 +39,7 @@ const Page = () => {
       <div className="w-full flex items-center justify-between border-b mb-4">
         <h1 className="text-2xl font-bold mb-4">Interview Page</h1>
         <span className="flex gap-2 items-center">
-          <Link href="/resume">
+          <Link href="/">
             <Button variant="outline">Manage Resumes</Button>
           </Link>
           <NewInterviewForm />

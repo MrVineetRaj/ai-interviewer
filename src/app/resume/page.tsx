@@ -47,11 +47,11 @@ const ResumePage = () => {
               <p className="text-sm text-gray-600 mb-4">
                 {new Date(resume.createdAt).toLocaleDateString()}
               </p>
-              <Link href={`/resume/${resume.id}`}>
+              {/* <Link href={`/resume/${resume.id}`}>
                 <Button variant="outline" size="sm" className="w-full">
                   View Details
                 </Button>
-              </Link>
+              </Link> */}
             </div>
           ))}
         </div>

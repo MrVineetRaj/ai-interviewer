@@ -8,10 +8,23 @@ services:
       POSTGRES_PASSWORD: 12345678
       POSTGRES_DB: ai-interviewer
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  app:
+    build: .
+    container_name: ai-interviewer
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgresql://admin:12345678@db:5432/ai-interviewer"
+      OPENAI_API_KEY: "xxxx"
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    command: sh -c "pnpm dlx prisma@latest migrate dev && pnpm run dev"
 
 volumes:
   pgdata:
