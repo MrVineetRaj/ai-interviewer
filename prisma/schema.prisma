@@ -40,7 +40,8 @@ model Interview {
   coverLetter    String?
   startedAt      DateTime?
   endedAt        DateTime?
-  feedback       String?
+  interviewFeedback       String?
+  resumeFeedback String?
   messages       String?
   interviewStatus InterviewStatus @default(pending)
 

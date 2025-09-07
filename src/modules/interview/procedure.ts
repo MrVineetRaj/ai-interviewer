@@ -74,6 +74,9 @@ export const interviewRouter = {
         where: {
           id: interviewId,
         },
+        include: {
+          resume: true,
+        },
       });
 
       return interviewe;
@@ -154,7 +157,10 @@ export const interviewRouter = {
           },
         });
       } else {
-        if (interview.endedAt && interview.endedAt.getTime() < currTime.getTime()) {
+        if (
+          interview.endedAt &&
+          interview.endedAt.getTime() < currTime.getTime()
+        ) {
           isInterviewEnded = true;
         }
         await db.interview.update({
@@ -171,5 +177,88 @@ export const interviewRouter = {
       }
 
       return { isInterviewEnded, messages };
+    }),
+
+  getInterviewFeedBack: baseProcedure
+    .input(
+      z.object({
+        interviewId: z.string(),
+      })
+    )
+    .mutation(async ({ input: { interviewId } }) => {
+      const data = await db.interview.findUnique({
+        where: {
+          id: interviewId,
+        },
+        include: {
+          resume: true,
+        },
+      });
+
+      if (!data) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Interview not found",
+        });
+      }
+
+      const response = await openAiServices.getFeedBack({
+        prompt: SYSTEM_PROMPT.get_system_prompt_for_interview_feedback({
+          jobDescription:
+            data.companyName + "\n" + data.jobRole + "\n" + data.jobDescription,
+          resume: data.resume.resumeContent,
+          transcript:
+            data.messages?.replaceAll("assistant", "interviewer") || "",
+        }),
+      });
+
+      await db.interview.update({
+        where: {
+          id: interviewId,
+        },
+        data: {
+          interviewFeedback: response,
+        },
+      });
+    }),
+  getResumeFeedBack: baseProcedure
+    .input(
+      z.object({
+        interviewId: z.string(),
+      })
+    )
+    .mutation(async ({ input: { interviewId } }) => {
+      const data = await db.interview.findUnique({
+        where: {
+          id: interviewId,
+        },
+        include: {
+          resume: true,
+        },
+      });
+
+      if (!data) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Interview not found",
+        });
+      }
+
+      const response = await openAiServices.getFeedBack({
+        prompt: SYSTEM_PROMPT.get_system_prompt_for_resume_feedback({
+          jobDescription:
+            data.companyName + "\n" + data.jobRole + "\n" + data.jobDescription,
+          resume: data.resume.resumeContent,
+        }),
+      });
+
+      await db.interview.update({
+        where: {
+          id: interviewId,
+        },
+        data: {
+          resumeFeedback: response,
+        },
+      });
     }),
 };

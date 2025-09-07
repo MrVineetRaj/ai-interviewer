@@ -23,6 +23,21 @@ class OpenAiServices {
 
     return response.choices[0].message.content;
   }
+
+  async getFeedBack({ prompt }: { prompt: string }) {
+    const response = await this.openai.chat.completions.create({
+      model: "gpt-4.1-mini",
+      messages: [
+        {
+          role: "system",
+          content: prompt,
+        },
+      ],
+      response_format: { type: "json_object" },
+    });
+
+    return response.choices[0].message.content;
+  }
 }
 
 export const openAiServices = new OpenAiServices();
