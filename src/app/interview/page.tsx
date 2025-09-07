@@ -97,7 +97,7 @@ export function NewInterviewForm() {
     null
   );
   const [companyName, setCompanyName] = React.useState("");
-  const [jboRole, setJobRole] = React.useState("");
+  const [jobRole, setJobRole] = React.useState("");
   const [jobDescription, setJobDescription] = React.useState("");
   const [duration, setDuration] = React.useState<number>(15 * 60 * 1000);
   const [selectedResumeId, setSelectedResumeId] = React.useState<string>("");
@@ -117,7 +117,7 @@ export function NewInterviewForm() {
   );
 
   async function handleSubmit() {
-    if (!companyName || !jboRole || !jobDescription || !duration) return;
+    if (!companyName || !jobRole || !jobDescription || !duration) return;
 
     let coverLetterContent: string = "";
 
@@ -149,7 +149,7 @@ export function NewInterviewForm() {
     }
 
     await addInterview.mutateAsync({
-      jobRole: jboRole,
+      jobRole: jobRole,
       jobDescription,
       resumeId: selectedResumeId,
       durationMs: duration.toString(),
@@ -231,7 +231,7 @@ export function NewInterviewForm() {
                 id="job-role"
                 name="job-role"
                 placeholder="Software Development Engineer"
-                value={jboRole}
+                value={jobRole}
                 onChange={(e) => setJobRole(e.target.value)}
               />
             </div>

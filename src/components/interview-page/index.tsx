@@ -88,78 +88,79 @@ export const InterviewPage = ({ interviewId }: { interviewId: string }) => {
     </div>
   ) : (
     <>
-      <ResizablePanelGroup
-        direction="horizontal"
-        className="w-full rounded-lg border md:min-w-[450px] bg-card"
-      >
-        <ResizablePanel defaultSize={50} className="flex gap-2 flex-col p-6">
-          <span className="border-b pb-4 mb-2">
-            <Label className="text-muted-foreground">Interviewing for</Label>
-            <h1 className="font-bold text-2xl">
-              {interviewData?.jobRole}, {interviewData?.companyName}
-            </h1>
-          </span>
-          <span className="flex items-center gap-2 w-full justify-between">
-            <Label>Code Editor</Label>
-            <span className="flex items-center gap-2 ">
-              <Select
-                onValueChange={setSelectedLanguage}
-                defaultValue={selectedLanguage}
-              >
-                <SelectTrigger value={selectedLanguage} className="w-[150px]">
-                  {selectedLanguage}
-                </SelectTrigger>
-                <SelectContent>
-                  {SUPPORTED_LANGUAGES.map((lang) => (
-                    <SelectItem key={lang} value={lang}>
-                      {lang}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {/* <Button>Send Code</Button> */}
-              <Tooltip>
-                <TooltipTrigger onClick={() => restartRecording()}>
-                  {!restartingRecording && (
-                    <MicIcon
-                      className={cn(
-                        "size-5 text-muted-foreground cursor-pointer hover:text-primary transition-colors"
-                      )}
-                    />
-                  )}
-                  {restartingRecording && (
-                    <Loader className="size-5 text-muted-foreground animate-spin cursor-not-allowed opacity-50" />
-                  )}
-                </TooltipTrigger>
-                <TooltipContent className=" px-4 py-2 text-sm text-muted-foreground rounded-md border bg-black">
-                  Restart Recording
-                </TooltipContent>
-              </Tooltip>
+      {interviewData && (
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="w-full rounded-lg border md:min-w-[450px] bg-card"
+        >
+          <ResizablePanel defaultSize={50} className="flex gap-2 flex-col p-6">
+            <span className="border-b pb-4 mb-2">
+              <Label className="text-muted-foreground">Interviewing for</Label>
+              <h1 className="font-bold text-2xl">
+                {interviewData?.jobRole}, {interviewData?.companyName}
+              </h1>
             </span>
-          </span>
-          <div className="w-full h-full">
-            <CodeEditor
-              language={selectedLanguage}
-              setUserCode={setUserCode}
-              userCode={userCode}
-            />
-          </div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize={50}>
-          <span className="border-b p-4 flex items-center justify-between">
-            <Label>Interviewer</Label>
-            <span className="text-right">
-              {isSending && "Analyzing..."}
-              {isRecording && "Recording..."}
-              {responseArrived && "Restarting recording in 5s..."}
-              {!isRecording && !isSending && !responseArrived && "Idle"}
+            <span className="flex items-center gap-2 w-full justify-between">
+              <Label>Code Editor</Label>
+              <span className="flex items-center gap-2 ">
+                <Select
+                  onValueChange={setSelectedLanguage}
+                  defaultValue={selectedLanguage}
+                >
+                  <SelectTrigger value={selectedLanguage} className="w-[150px]">
+                    {selectedLanguage}
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SUPPORTED_LANGUAGES.map((lang) => (
+                      <SelectItem key={lang} value={lang}>
+                        {lang}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {/* <Button>Send Code</Button> */}
+                <Tooltip>
+                  <TooltipTrigger onClick={() => restartRecording()}>
+                    {!restartingRecording && (
+                      <MicIcon
+                        className={cn(
+                          "size-5 text-muted-foreground cursor-pointer hover:text-primary transition-colors"
+                        )}
+                      />
+                    )}
+                    {restartingRecording && (
+                      <Loader className="size-5 text-muted-foreground animate-spin cursor-not-allowed opacity-50" />
+                    )}
+                  </TooltipTrigger>
+                  <TooltipContent className=" px-4 py-2 text-sm text-muted-foreground rounded-md border bg-black">
+                    Restart Recording
+                  </TooltipContent>
+                </Tooltip>
+              </span>
             </span>
-          </span>
-          <div className="w-full h-full">
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+            <div className="w-full h-full">
+              <CodeEditor
+                language={selectedLanguage}
+                setUserCode={setUserCode}
+                userCode={userCode}
+              />
+            </div>
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={50}>
+            <span className="border-b p-4 flex items-center justify-between">
+              <Label>Interviewer</Label>
+              <span className="text-right">
+                {isSending && "Analyzing..."}
+                {isRecording && "Recording..."}
+                {responseArrived && "Restarting recording in 5s..."}
+                {!isRecording && !isSending && !responseArrived && "Idle"}
+              </span>
+            </span>
+            <div className="w-full h-full"></div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      )}
       <VoiceInterpreter
         // transcript={transcript}
         setTranscript={setTranscript}

@@ -82,7 +82,7 @@ export const interviewRouter = {
       const interview = await db.interview.findUnique({
         where: { id: interviewId },
       });
-      
+
       let messages: {
         role: "assistant" | "developer" | "system" | "user";
         content: string;
@@ -99,7 +99,7 @@ export const interviewRouter = {
       }
       messages.push({
         role: "user",
-        content: "userResponse",
+        content: userResponse,
       });
 
       const resp = openAiServices.getNextMessage({ messages });
