@@ -1,0 +1,17 @@
+name: ai-interviewer
+services:
+  db:
+    image: postgres:16
+    container_name: POSTGRES_DB
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: ai-interviewer
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+
+volumes:
+  pgdata:

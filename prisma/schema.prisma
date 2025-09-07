@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ResumeData {
+  id            String   @id @default(uuid())
+  hash          String   @unique
+  title         String   @unique
+  resumeContent String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  interviews Interview[]
+}
+
+enum InterviewStatus {
+  pending
+  goingon
+  ended
+}
+model Interview {
+  id             String    @id @default(uuid())
+  resumeId       String
+  companyName    String
+  jobRole        String
+  jobDescription String
+  durationMs     String
+  coverLetter    String?
+  startedAt      DateTime?
+  endedAt        DateTime?
+  feedback       String?
+  messages       String?
+  interviewStatus InterviewStatus @default(pending)
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  resume    ResumeData @relation(fields: [resumeId], references: [id])
+}

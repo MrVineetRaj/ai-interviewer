@@ -14,8 +14,10 @@ import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import { Loader, Mic2Icon, MicIcon } from "lucide-react";
 import { TooltipContent } from "@radix-ui/react-tooltip";
 import { cn } from "@/lib/utils";
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 
-export const InterviewPage = () => {
+export const InterviewPage = ({ interviewId }: { interviewId: string }) => {
   const SUPPORTED_LANGUAGES = ["cpp", "java", "python", "javascript"];
   const [selectedLanguage, setSelectedLanguage] = React.useState<string>("cpp");
   const [userCode, setUserCode] = React.useState<string>("");
@@ -27,6 +29,12 @@ export const InterviewPage = () => {
   const [responseArrived, setResponseArrived] = React.useState<boolean>(false);
   const [restartingRecording, setRestartingRecording] =
     React.useState<boolean>(false);
+  const trpc = useTRPC();
+  const { data: interviewData, isPending: loadingInterview } = useQuery(
+    trpc.interviewRouter.getInterview.queryOptions({
+      interviewId: interviewId,
+    })
+  );
 
   async function callbackFn(finalTranscript: string) {
     console.log("Final Transcript:", finalTranscript);
@@ -74,13 +82,23 @@ export const InterviewPage = () => {
     };
   }, [transcript]);
 
-  return (
+  return loadingInterview ? (
+    <div className="flex w-full h-full items-center justify-center">
+      Loading interview...
+    </div>
+  ) : (
     <>
       <ResizablePanelGroup
         direction="horizontal"
         className="w-full rounded-lg border md:min-w-[450px] bg-card"
       >
         <ResizablePanel defaultSize={50} className="flex gap-2 flex-col p-6">
+          <span className="border-b pb-4 mb-2">
+            <Label className="text-muted-foreground">Interviewing for</Label>
+            <h1 className="font-bold text-2xl">
+              {interviewData?.jobRole}, {interviewData?.companyName}
+            </h1>
+          </span>
           <span className="flex items-center gap-2 w-full justify-between">
             <Label>Code Editor</Label>
             <span className="flex items-center gap-2 ">
@@ -129,29 +147,17 @@ export const InterviewPage = () => {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={50}>
-          <ResizablePanelGroup direction="vertical">
-            <ResizablePanel
-              defaultSize={75}
-              className="flex gap-2 flex-col p-6"
-            >
-              <Label>Problem Statment</Label>
-              <div className="w-full h-full"></div>
-            </ResizablePanel>
-            <ResizableHandle />
-            <ResizablePanel defaultSize={25}>
-              <div className="flex flex-col gap-2 h-full p-6">
-                <Label>Your actions</Label>
-                <div className="w-full h-full "></div>
-                <span className="text-right">
-                  {isSending && "Analyzing..."}
-                  {isRecording && "Recording..."}
-                  {responseArrived && "Restarting recording in 5s..."}
-                  {!isRecording && !isSending && !responseArrived && "Idle"}
-                  {/* {!recordAudio && !responseArrived && "Paused"} */}
-                </span>
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
+          <span className="border-b p-4 flex items-center justify-between">
+            <Label>Interviewer</Label>
+            <span className="text-right">
+              {isSending && "Analyzing..."}
+              {isRecording && "Recording..."}
+              {responseArrived && "Restarting recording in 5s..."}
+              {!isRecording && !isSending && !responseArrived && "Idle"}
+            </span>
+          </span>
+          <div className="w-full h-full">
+          </div>
         </ResizablePanel>
       </ResizablePanelGroup>
       <VoiceInterpreter
