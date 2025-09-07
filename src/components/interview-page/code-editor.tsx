@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Editor from "@monaco-editor/react";
 
 interface Props {
@@ -7,12 +7,14 @@ interface Props {
   setUserCode: (code: string) => void;
   userCode: string;
 }
-export const CodeEditor = ({ language, setUserCode,userCode }: Props) => {
+export const CodeEditor = ({ language, setUserCode, userCode }: Props) => {
+
   return (
     <Editor
       height="90vh"
       language={language}
-      value={userCode || "Write your code here..."}
+      value={userCode}
+      onChange={(value) => setUserCode(value as string)}
       theme="vs-dark"
       options={{
         fontSize: 12,
