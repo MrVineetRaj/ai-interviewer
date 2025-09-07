@@ -41,7 +41,7 @@ const ResumePage = () => {
           {resumes.map((resume) => (
             <div
               key={resume.id}
-              className="border p-4 rounded-md shadow-md w-60"
+              className="border p-4 rounded-md shadow-md min-w-60 bg-card"
             >
               <h2 className="text-lg font-semibold mb-2">{resume.title}</h2>
               <p className="text-sm text-gray-600 mb-4">

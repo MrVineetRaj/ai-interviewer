@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/client";
 
@@ -10,6 +10,11 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+const poppins = Poppins({
+  variable: "--font-poppins",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -26,11 +31,7 @@ export default function RootLayout({
   return (
     <TRPCReactProvider>
       <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-        </body>
+        <body className={`${poppins.variable}  antialiased`}>{children}</body>
       </html>
     </TRPCReactProvider>
   );
