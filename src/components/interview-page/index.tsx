@@ -21,6 +21,7 @@ import { MessageContainer } from "../shared/message-container";
 import { InterviewStatus } from "@/generated/prisma";
 import { ttsServices } from "@/lib/tts.config";
 import { Badge } from "../ui/badge";
+import CompletedInterviewView from "./competed-interview-view";
 
 export const InterviewPage = ({ interviewId }: { interviewId: string }) => {
   const SUPPORTED_LANGUAGES = ["cpp", "java", "python", "javascript"];
@@ -211,7 +212,7 @@ export const InterviewPage = ({ interviewId }: { interviewId: string }) => {
       Loading interview...
     </div>
   ) : interviewData?.interviewStatus === InterviewStatus.ended ? (
-    <>Inter view Ended</>
+    <CompletedInterviewView interviewData={interviewData} />
   ) : (
     <>
       {interviewData && (
